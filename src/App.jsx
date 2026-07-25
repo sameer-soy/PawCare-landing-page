@@ -1,20 +1,55 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import banner from './assets/banner.jpg';
+import logo from './assets/logo.png';
 
 export default function App() {
+  const [activeTab, setActiveTab] = useState('home');
+
+  useEffect(() => {
+    const sections = ['home', 'services', 'pricing', 'gallery', 'reviews', 'contact']
+      .map(id => document.getElementById(id))
+      .filter(Boolean);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveTab(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.5 } // Trigger when at least 50% of the section is visible
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="scroll-smooth bg-background text-on-surface font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
       
 {/* TopNavBar */}
 <nav className="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md shadow-sm shadow-primary/10">
 <div className="flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto">
-<div className="font-display text-headline-md text-primary tracking-tight">PawCare</div>
+<div className="flex items-center gap-2 font-display text-headline-md text-primary tracking-tight">
+  <img src={logo} alt="PawCare Logo" className="h-10" />
+</div>
 <div className="hidden md:flex gap-8 items-center">
-<a className="text-primary font-bold border-b-2 border-primary font-label-md text-label-md" href="#home">Home</a>
-<a className="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#services">Services</a>
-<a className="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#pricing">Pricing</a>
-<a className="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#gallery">Gallery</a>
-<a className="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#reviews">Reviews</a>
-<a className="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="#contact">Contact</a>
+  {['home', 'services', 'pricing', 'gallery', 'reviews', 'contact'].map((tab) => (
+    <a
+      key={tab}
+      href={`#${tab}`}
+      onClick={() => setActiveTab(tab)}
+      className={`font-label-md text-label-md capitalize transition-colors ${
+        activeTab === tab
+          ? 'text-primary font-bold border-b-2 border-primary'
+          : 'text-on-surface-variant hover:text-primary'
+      }`}
+    >
+      {tab}
+    </a>
+  ))}
 </div>
 <button className="bg-secondary text-on-secondary px-6 py-2.5 rounded-full font-label-md text-label-md hover:brightness-110 active:scale-95 transition-all ambient-shadow" onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}>
         Book Now
@@ -25,7 +60,7 @@ export default function App() {
 <header className="relative min-h-screen flex items-center pt-20 overflow-hidden" id="home">
 <div className="absolute inset-0 z-0">
 <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent z-10"></div>
-<img className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcJUuRTpJJL8oMfwfbTbRJWMxbZKnYyzUQeGI1z_mczXS6GkdOc9ankvQ7303UxtQkKYG8yuO8ocCPE701gBHR94rxnRUey74CKzsOMcVeShdkiQEGNBUkYDNhi0jy55UGbI7cwALnbrmXkMRr4uE3jP1ltpih8YdjH39-V04WWolcJvFi48p2geo7kmSJBRoULXjYdbknYtiL4UtWH5FT5FBMQzACSXCV4LkKoLPktFApo1LK4rKO"/>
+<img className="w-full h-full object-cover" src={banner}/>
 </div>
 <div className="relative z-20 px-margin-desktop max-w-container-max mx-auto w-full">
 <div className="max-w-2xl">
@@ -344,7 +379,9 @@ export default function App() {
 <footer className="bg-surface-container-lowest py-12 px-margin-desktop">
 <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter max-w-container-max mx-auto">
 <div className="space-y-6">
-<div className="font-display text-headline-md text-primary">Kindred Paws</div>
+<div className="flex items-center gap-2 mb-4 font-display text-headline-md text-primary">
+  <img src={logo} alt="PawCare Logo" className="h-10" />
+</div>
 <p className="font-body-md text-body-md text-on-surface-variant">Nurturing every paw with love. Your local experts in professional pet care and wellness.</p>
 <div className="flex gap-4">
 <a className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary-container hover:text-white transition-all" href="#">
@@ -390,7 +427,7 @@ export default function App() {
 </li>
 <li className="flex gap-3">
 <span className="material-symbols-outlined text-primary text-[20px]">mail</span>
-<span>hello@kindredpaws.com</span>
+<span>sameersoy117@gmail.com</span>
 </li>
 </ul>
 </div>
